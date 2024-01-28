@@ -1,5 +1,6 @@
 import React from 'react'
 import './Cover.css';
+import { Link, Route, Routes } from 'react-router-dom';
 
 
 function Cover() {
@@ -17,7 +18,10 @@ function Cover() {
             </form>
         </div> 
         <div className='description'>
-          <p>Don't have an account? <a href="">Register</a></p>  
+          <Routes>
+            <Route path='/' element={<p>Don't have an account? <Link to="/Register">Register</Link></p>  }></Route>
+          </Routes>
+          
         </div>       
       </div>
     </div>

@@ -1,14 +1,5 @@
-/* For Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-
-
-.register{
-    padding-top:7%;
+.adm{
+    padding-top:10%;
 }
 
 .login{
@@ -41,49 +32,17 @@ input::-webkit-inner-spin-button {
 
 .id{
     
-    height: 40px;
-    width: 76%;
+    height: 35px;
+    width: 75%;
     border-radius: 8px;
     margin-left: 10%;
 }
-
-.name{
-    height: 40px;
-    width: 76%;
-    border-radius: 8px;
-    margin-left: 10%;
-    margin-top: 15px;
-}
-
-.mobile{
-    height: 40px;
-    width: 50%;
-    border-radius: 8px;
-    margin-left: 10%;
-    margin-top: 15px;
-}
-
-.verify{
-    height: 31px;
-    width: 60%;
-    background-color: #AC385B;
-    border-radius: 8px;
-    right: 10px;
-    color: white;
-}
-
-.verify-btn{
-    padding-top: 20px;
-    float: right;
-    width: 35%;
-}
-
 
 .pswd{
     margin-left: 10%;
     margin-top: 15px;
-    height: 40px;
-    width: 76%;
+    height: 35px;
+    width: 75%;
     border-radius: 8px;
 }
 
@@ -98,13 +57,8 @@ input::-webkit-inner-spin-button {
 
 .login-btn {
     padding-top: 15px;
-    padding-right: 50px;
+    padding-right: 46px;
     display: flex;
     justify-content: end;
-}
-
-.description{
-    margin-left: 12%;
-    padding: 10px;
 }
 
