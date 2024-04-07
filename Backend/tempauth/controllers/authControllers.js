@@ -5,19 +5,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const { generateRandomPassword } = require('../utils/passwordGenerator');
 const nodemailer = require('nodemailer');
+const Po = require('../models/po');
 
 
-module.exports.pologin_post = async (req, res) => {
-    const { email, ktuid, password } = req.body;
-
-    try {
-        const user = await User.create({ email, ktuid, password });
-        res.status(201).json({ user });
-    } catch (err) {
-        console.log(err);
-        res.status(400).json({ error: err.message });
-    }
-};
 
 module.exports.login_post = async (req, res) => {
     const { email, password } = req.body;
@@ -183,6 +173,53 @@ module.exports.admin_login_post = async (req, res) => {
 };
 
 
+exports.po_login_post = async (req, res) => {
+    const { email, password } = req.body;
+
+    console.log(email);
+  
+    try {
+      const po = await Po.findOne({ email });
+  
+      if (!po) {
+        return res.status(400).json({ error: 'PO does not exist.' });
+      }
+  
+      const passwordMatch = await bcrypt.compare(password, po.password);
+  
+      if (!passwordMatch) {
+        return res.status(400).json({ error: 'Invalid credentials' });
+      }
+  
+      const token = jwt.sign({ poId: po._id }, 'your_secret_key', { expiresIn: '1h' });
+  
+      res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000 });
+  
+      res.status(200).json({ token, userType: 'po' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+};
+
+module.exports.po_signup_post = async (req, res) => {
+    const { email, password } = req.body;
+    
+
+    try {
+        const existingPo = await Po.findOne({ email });
+
+        if (existingPo) {
+            return res.status(400).json({ error: 'PO already exists with this email.' });
+        }
+
+        const newPo = await Po.create({ email, password });
+        res.status(201).json({ po: newPo });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
 // delete all collection
 
 // async function deleteAllData() {

@@ -3,36 +3,50 @@ import { useNavigate } from 'react-router-dom';
 import './POLogin.css';
 import NavBar from '../../components/NavBar/NavBar';
 import { Link } from 'react-router-dom';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 function POLogin() { 
   const [email, setEmail] = useState('');
-  const [ktuid, setKtuid] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+  const {login} = useAuthContext()
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
 
-    const user = { email, ktuid, password };
+    const user = { email, password };
+   
 
     try {
-      const response = await fetch(`http://localhost:3000/signup`, { // change this when hosting
+      console.log(JSON.stringify(user)); // Add this line before the fetch call
+      const response = await fetch('http://localhost:3000/po-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
       });
 
       if (response.ok) {
+  const responseData = await response.json();
 
-        console.log('Registration successful');
-        
-        navigate('/');
-        // Perform any actions after successful registration, e.g., redirect to login page
-      } else {
-        console.log('Failed to register123', response);
-      }
+  // Assuming the JWT is in the response body under the key 'token'
+        const { token,userType } = responseData;
+      
+        // Store the JWT token in local storage
+        localStorage.setItem('jwt', token);
+        login(responseData);
+        // Login successful
+  console.log('Login successful');
+
+// Navigate to the dashboard
+  navigate('/dashboard');
+} else {
+  // Handle login failure (e.g., invalid credentials)
+  console.log('Login failed');
+}
     } catch (error) {
-      console.error('Failed to register', error);
+      console.error('Login error:', error);
     }
   };
 
