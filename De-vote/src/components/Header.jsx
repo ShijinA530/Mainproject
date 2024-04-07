@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { NavLink, Link } from 'react-router-dom';
 
 function Header({ userType }) {
@@ -89,7 +89,7 @@ function Header({ userType }) {
         </div>
       </nav>
     </header>
-  );
+);
 }
 
-export default Header;
+export default Header
