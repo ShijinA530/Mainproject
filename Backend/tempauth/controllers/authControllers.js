@@ -179,6 +179,74 @@ module.exports.admin_login_post = async (req, res) => {
     }
 };
 
+module.exports.election_type_get = async (req, res) => {
+    try {
+        const electionTypes = await Candidate.distinct('electionType');
+        res.status(200).json({ electionTypes });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+module.exports.type_candidate_get = async (req, res) => {
+    try {
+        const { electionType } = req.body;
+        
+        // Query candidates based on the provided electionType
+        const candidates = await Candidate.find({ electionType });
+
+        if (candidates.length === 0) {
+            return res.status(404).json({ message: 'No candidates found for the provided election type.' });
+        }
+
+        // Return the found candidates
+        res.status(200).json({ candidates });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+module.exports.all_candidate_get = async (req, res) => {
+    try {
+        const uniqueElectionTypes = await Candidate.distinct('electionType');
+
+        const candidatesByType = {};
+
+        for (const type of uniqueElectionTypes) {
+            const candidates = await Candidate.find({ electionType: type });
+
+            const candidateNames = candidates.map(candidate => `${candidate.firstName} ${candidate.middleName ? candidate.middleName + ' ' : ''}${candidate.lastName}`);
+
+            candidatesByType[type] = candidateNames;
+        }
+
+        // Return the result as JSON
+        res.status(200).json(candidatesByType);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+module.exports.dashboard_get = async (req, res) => {
+    try {
+        // Retrieve total number of registered users
+        const totalUsers = await User.countDocuments();
+
+        // Retrieve unique election types
+        const uniqueElectionTypes = await Candidate.distinct('electionType');
+
+        // Count the number of unique election types
+        const numElectionTypes = uniqueElectionTypes.length;
+
+        // Return the data
+        res.status(200).json({ totalUsers, numElectionTypes });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
 
 // delete all collection
 
